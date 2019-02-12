@@ -8,5 +8,16 @@
 </head>
 <body>
     <p>welcome</p>
+    <script src="/socket.io/socket.io.js"></script>
+    <!-- <script src="/public/js/index.js"></script> -->
+    <script>
+        var socket = io();
+        socket.on('connect',()=>{
+            console.log('connecetd')
+        })
+        socket.on('disconnect', ()=>{
+            console.log('disconnected')
+        })
+      </script>
 </body>
 </html>
