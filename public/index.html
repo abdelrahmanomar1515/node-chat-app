@@ -9,9 +9,21 @@
 </head>
 
 <body>
-    <p>welcome</p>
+    <ol id="message-list"></ol>
+    <form id="message-form">
+        <label for="message">Message:</label>
+        <input type="text" name="message" id="message-form-message">
+        <label for="from">From:</label>
+        <input type="text" name="from" id="message-form-from">
+        <button type="submit">Send</button>
+    </form>
+
+
+
+
     <script src="/socket.io/socket.io.js"></script>
-    <script src="/js/index.js"></script>
+    <script src="./js/libs/jquery-3.3.1.min.js"></script>
+    <script src="./js/index.js"></script>
 </body>
 
 </html>

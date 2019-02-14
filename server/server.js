@@ -2,8 +2,8 @@ const path = require('path')
 const http = require('http')
 const express = require('express')
 const socketIO = require('socket.io')
-const {generateMessage} = require('./utils/message')
 
+const {generateMessage} = require('./utils/message')
 const publicPath = path.join(__dirname, '../public')
 const port = process.env.PORT || 3000
 
@@ -20,9 +20,10 @@ io.on('connection', (socket) => {
 
     socket.broadcast.emit('newMsg', generateMessage('admin','a new user joined'))
 
-    socket.on('createMsg', (msg) => {
+    socket.on('createMsg', (msg,cb) => {
         console.log(msg)
         io.emit('newMsg', generateMessage(msg.from,msg.text))
+        cb("hello from the server")
     })
 
     socket.on('disconnect', () => {
