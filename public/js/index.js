@@ -1,4 +1,20 @@
 var socket = io();
+
+function scrollToBottom() {
+    const messageList = jQuery('#message-list')
+    const newMessage = messageList.children('li:last-child')
+
+    const clientHeight = messageList.prop('clientHeight')
+    const scrollTop = messageList.prop('scrollTop')
+    const scrollHeight = messageList.prop('scrollHeight')
+    const newMessageHeight = newMessage.innerHeight()
+    const lastMessageHeight = newMessage.prev().innerHeight()
+
+    if (clientHeight + scrollTop + newMessageHeight + lastMessageHeight >= scrollHeight) {
+        messageList.scrollTop(scrollHeight)
+    }
+}
+
 socket.on('connect', function () {
     console.log('connecetd')
 })
@@ -10,23 +26,25 @@ socket.on('disconnect', function () {
 socket.on('newMsg', function (msg) {
     const formattedTime = moment(msg.createdAt).format('H:mm')
     const template = jQuery('#message-template').html()
-    const html = Mustache.render(template,{
+    const html = Mustache.render(template, {
         text: msg.text,
         from: msg.from,
         createdAt: formattedTime
     })
     jQuery('#message-list').append(html)
+    scrollToBottom()
 })
 
 socket.on('newLocationMsg', function (msg) {
     const formattedTime = moment(msg.createdAt).format('H:mm')
     const template = jQuery('#location-message-template').html()
-    const html = Mustache.render(template,{
+    const html = Mustache.render(template, {
         text: msg.url,
         from: msg.from,
         createdAt: formattedTime
     })
     jQuery('#message-list').append(html)
+    scrollToBottom()
 })
 
 jQuery('#message-form').on('submit', (e) => {
