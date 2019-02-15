@@ -7,21 +7,47 @@ socket.on('disconnect', function () {
     console.log('disconnected')
 })
 
-socket.on('newMsg', function(msg) {
-    console.log("new msg", msg)
+socket.on('newMsg', function (msg) {
     const li = jQuery('<li></li>')
     li.text(`${msg.from}: ${msg.text}`)
     jQuery('#message-list').append(li)
 })
 
+socket.on('newLocationMsg', function (msg) {
+    const li = jQuery('<li></li>')
+    const a = jQuery('<a target="_blank">My current location</a>')
 
-jQuery('#message-form').on('submit', (e) =>{
+    li.text(`${msg.from}: `)
+    a.attr('href', msg.url)
+    li.append(a)
+    jQuery('#message-list').append(li)
+})
+
+jQuery('#message-form').on('submit', (e) => {
     e.preventDefault()
-    console.log(e)
-    socket.emit('createMsg',{
-        from: jQuery('#message-form-from').val(),
-        text: jQuery('#message-form-message').val()
-    }, (data)=>{
-        console.log(data)
+    const messageTextbox = jQuery('#message-form-message')
+    socket.emit('createMsg', {
+        from: 'User',
+        text: messageTextbox.val()
+    }, (data) => {
+        messageTextbox.val('')
+    })
+})
+
+const locationButton = jQuery('#location-button')
+locationButton.on('click', function (e) {
+    if (!navigator.geolocation) {
+        return alert('Geolocation is not supported by your browser')
+    }
+    locationButton.attr('disabled', 'disabled').text('Sending location...')
+    navigator.geolocation.getCurrentPosition(function (position) {
+        locationButton.removeAttr('disabled').text('Send location')
+        socket.emit('createLocationMsg', {
+            latitude: position.coords.latitude,
+            longitude: position.coords.longitude
+        })
+    }, function () {
+        locationButton.removeAttr('disabled').text('Send location')
+        alert('Unable to fetch location')
     })
 })

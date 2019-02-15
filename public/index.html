@@ -5,18 +5,27 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="./css/style.css">
     <title>Chat App</title>
 </head>
 
-<body>
-    <ol id="message-list"></ol>
-    <form id="message-form">
-        <label for="message">Message:</label>
-        <input type="text" name="message" id="message-form-message">
-        <label for="from">From:</label>
-        <input type="text" name="from" id="message-form-from">
-        <button type="submit">Send</button>
-    </form>
+<body class="chat">
+
+    <div class="chat__sidebar">
+        <h3>People</h3>
+        <div id="users"></div>
+    </div>
+
+    <div class="chat__main">
+        <ol id="message-list" class="chat__messages"></ol>
+        <div class="chat__footer">
+            <form id="message-form">
+                <input type="text" name="message" id="message-form-message" autocomplete="off" autofocus>
+                <button type="submit">Send</button>
+            </form>
+            <button type="button" id="location-button">Send location</button>
+        </div>
+    </div>
 
 
 

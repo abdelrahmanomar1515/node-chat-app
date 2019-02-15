@@ -3,7 +3,7 @@ const http = require('http')
 const express = require('express')
 const socketIO = require('socket.io')
 
-const {generateMessage} = require('./utils/message')
+const {generateMessage, generateLocationMessage} = require('./utils/message')
 const publicPath = path.join(__dirname, '../public')
 const port = process.env.PORT || 3000
 
@@ -16,14 +16,17 @@ app.use(express.static(publicPath))
 io.on('connection', (socket) => {
     console.log('connected')
 
-    socket.emit('newMsg', generateMessage('admin', 'welcome to chat app'))
+    socket.emit('newMsg', generateMessage('Admin', 'Welcome to chat app'))
 
-    socket.broadcast.emit('newMsg', generateMessage('admin','a new user joined'))
+    socket.broadcast.emit('newMsg', generateMessage('Admin','a new user joined'))
 
     socket.on('createMsg', (msg,cb) => {
-        console.log(msg)
         io.emit('newMsg', generateMessage(msg.from,msg.text))
-        cb("hello from the server")
+        cb()
+    })
+    
+    socket.on('createLocationMsg', (coords)=>{
+        io.emit('newLocationMsg', generateLocationMessage('Admin', coords.latitude,coords.longitude))
     })
 
     socket.on('disconnect', () => {
