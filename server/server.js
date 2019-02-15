@@ -35,12 +35,19 @@ io.on('connection', (socket) => {
     })
 
     socket.on('createMsg', (msg, cb) => {
-        io.emit('newMsg', generateMessage(msg.from, msg.text))
+        const user = users.getUser(socket.id)
+        if(user && isRealString(msg.text)){
+            const room = user.room
+            io.to(room).emit('newMsg', generateMessage(user.name, msg.text))
+        }
         cb()
     })
 
     socket.on('createLocationMsg', (coords) => {
-        io.emit('newLocationMsg', generateLocationMessage('Admin', coords.latitude, coords.longitude))
+        const user = users.getUser(socket.id)
+        if(user){
+            io.to(user.room).emit('newLocationMsg', generateLocationMessage(user.name, coords.latitude, coords.longitude))
+        }
     })
 
     socket.on('disconnect', () => {
